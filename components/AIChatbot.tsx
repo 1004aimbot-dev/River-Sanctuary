@@ -19,10 +19,14 @@ Key Information about River Sanctuary:
 - **Features:** 400m from the river, community facilities, walking trails, view decks.
 
 Lineup & Pricing (Estimates):
-1. **Type-A (Standard):** 10 pyeong (approx 33 sqm). 1.5 - 3.0 억 KRW (150-300 Million KRW). Compact, attic structure, cost-effective.
-2. **Type-B (Terrace):** 12 pyeong (approx 40 sqm). 2.2 - 3.5 억 KRW (220-350 Million KRW). Large terrace, spa option.
-3. **Type-C (Family):** 15 pyeong (approx 50 sqm). 3.5 - 4.5 억 KRW (350-450 Million KRW). 2 rooms + living room + garden.
-4. **Town T1 (Duplex):** 28 pyeong (approx 92 sqm). 5.2 - 6.5 억 KRW (520-650 Million KRW). 2-story private house, private garden.
+1. **Type-A (Standard):** 1.5 - 3.0 억 KRW. Compact size, attic structure, highly cost-effective for couples.
+2. **Type-B (Terrace):** 2.2 - 3.5 억 KRW. Features a large terrace and spa option, great for parties and relaxation.
+3. **Type-C (Family):** 3.5 - 4.5 억 KRW.
+   - **Specs:** Approx 42 pyeong (Total). 3 Bedrooms, 2 Bathrooms.
+   - **Key Features:** Spacious face-to-face LDK (Living/Dining/Kitchen), dedicated master room, and garden access. Ideal for families of 4 or more.
+4. **Town T1 (Duplex):** 5.2 - 6.5 억 KRW.
+   - **Specs:** Approx 46 pyeong (Total). 2-Story Private Detached House.
+   - **Key Features:** Central courtyard (Jungjeong), 2nd-floor master zone, 3 bathrooms, and a private garden. Ensures complete privacy and luxury living.
 
 Process:
 Consultation -> Visit -> Contract -> Production/Construction (Factory) -> Delivery & Move-in (approx 2.5 months total).

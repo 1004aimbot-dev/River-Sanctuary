@@ -1,13 +1,26 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 
 const Booking: React.FC = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { isDark, toggleTheme } = useTheme();
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const [date, setDate] = useState('');
+    const [interestType, setInterestType] = useState('second-house'); // 'second-house' or 'townhouse'
+
+    useEffect(() => {
+        const model = location.state?.model;
+        if (model) {
+            if (model.includes('type-t')) {
+                setInterestType('townhouse');
+            } else {
+                setInterestType('second-house');
+            }
+        }
+    }, [location.state]);
 
     const handleSubmit = () => {
         if (!name || !phone || !date) {
@@ -79,14 +92,28 @@ const Booking: React.FC = () => {
                             <label className="text-[#111518] dark:text-gray-300 text-sm font-medium leading-normal">관심 타입</label>
                             <div className="flex gap-3 flex-wrap">
                                 <label className="cursor-pointer group relative">
-                                    <input defaultChecked className="peer sr-only" name="interest_type" type="radio"/>
+                                    <input 
+                                        className="peer sr-only" 
+                                        name="interest_type" 
+                                        type="radio" 
+                                        value="second-house"
+                                        checked={interestType === 'second-house'}
+                                        onChange={(e) => setInterestType(e.target.value)}
+                                    />
                                     <div className="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-[#f0f3f4] dark:bg-background-dark border border-transparent peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary px-4 transition-all">
                                         <span className="material-symbols-outlined text-[20px] text-gray-500 dark:text-gray-400 peer-checked:text-primary">cottage</span>
                                         <p className="text-[#111518] dark:text-gray-300 peer-checked:text-primary text-sm font-medium">세컨드 하우스</p>
                                     </div>
                                 </label>
                                 <label className="cursor-pointer group relative">
-                                    <input className="peer sr-only" name="interest_type" type="radio"/>
+                                    <input 
+                                        className="peer sr-only" 
+                                        name="interest_type" 
+                                        type="radio" 
+                                        value="townhouse"
+                                        checked={interestType === 'townhouse'}
+                                        onChange={(e) => setInterestType(e.target.value)}
+                                    />
                                     <div className="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-[#f0f3f4] dark:bg-background-dark border border-transparent peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary px-4 transition-all">
                                         <span className="material-symbols-outlined text-[20px] text-gray-500 dark:text-gray-400 peer-checked:text-primary">apartment</span>
                                         <p className="text-[#111518] dark:text-gray-300 peer-checked:text-primary text-sm font-medium">타운하우스</p>

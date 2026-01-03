@@ -657,7 +657,7 @@ const UnitDetailModal = ({ unit, modelName, floorPlanUrl, onClose }: { unit: any
                     <button onClick={onClose} className="flex-1 py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl font-bold text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
                         닫기
                     </button>
-                     <button onClick={() => navigate('/booking')} className="flex-[2] py-3 bg-primary text-white rounded-xl font-bold text-sm shadow-md hover:bg-primary/90 transition-colors flex items-center justify-center gap-1">
+                     <button onClick={() => navigate('/booking', { state: { model: modelName } })} className="flex-[2] py-3 bg-primary text-white rounded-xl font-bold text-sm shadow-md hover:bg-primary/90 transition-colors flex items-center justify-center gap-1">
                         <span className="material-symbols-outlined text-[18px]">calendar_month</span>
                         상담/방문 예약
                     </button>
@@ -779,7 +779,7 @@ const ProductDetail: React.FC = () => {
     const navigate = useNavigate();
     const { isDark, toggleTheme } = useTheme();
     const [heroViewMode, setHeroViewMode] = useState<'default' | '360' | '3d'>('default');
-    const [activeTab, setActiveTab] = useState<'overview' | 'options' | 'delivery'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'options'>('overview');
     const [selectedModel, setSelectedModel] = useState<'type-a' | 'type-b' | 'type-c' | 'type-t1'>('type-a');
     const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
     const [selectedUnit, setSelectedUnit] = useState<any>(null);
@@ -838,513 +838,292 @@ const ProductDetail: React.FC = () => {
         'type-a': "https://lh3.googleusercontent.com/aida-public/AB6AXuDIYAWU-WPJUgXnyITRyYhwNw6EU4mCRWzPtMmc9FIXayxT1ncx7Bqxwx9RAdthW8hjwPRbG8StUj-o3BnVZwQZMO9W6YJJiwtzsql3NaFSeSkjUadn8Tn6Mt3wIhgsHbRcB8dAa09RX7x6ReIWaEySI-BbDOYdGNhDvap68wId2NloewU5aAeBMWXOLN10zeptvvTxkXyoSOW4V6wHhgR1fcoxSwVtOmeS81T3d_GzV_QtJTCDHzUfLz0ig1CPqHGoE_78Gp_blVBJ",
         'type-b': "https://lh3.googleusercontent.com/aida-public/AB6AXuDIYAWU-WPJUgXnyITRyYhwNw6EU4mCRWzPtMmc9FIXayxT1ncx7Bqxwx9RAdthW8hjwPRbG8StUj-o3BnVZwQZMO9W6YJJiwtzsql3NaFSeSkjUadn8Tn6Mt3wIhgsHbRcB8dAa09RX7x6ReIWaEySI-BbDOYdGNhDvap68wId2NloewU5aAeBMWXOLN10zeptvvTxkXyoSOW4V6wHhgR1fcoxSwVtOmeS81T3d_GzV_QtJTCDHzUfLz0ig1CPqHGoE_78Gp_blVBJ",
         'type-c': "https://lh3.googleusercontent.com/aida-public/AB6AXuDIYAWU-WPJUgXnyITRyYhwNw6EU4mCRWzPtMmc9FIXayxT1ncx7Bqxwx9RAdthW8hjwPRbG8StUj-o3BnVZwQZMO9W6YJJiwtzsql3NaFSeSkjUadn8Tn6Mt3wIhgsHbRcB8dAa09RX7x6ReIWaEySI-BbDOYdGNhDvap68wId2NloewU5aAeBMWXOLN10zeptvvTxkXyoSOW4V6wHhgR1fcoxSwVtOmeS81T3d_GzV_QtJTCDHzUfLz0ig1CPqHGoE_78Gp_blVBJ",
-        'type-t1': "https://lh3.googleusercontent.com/aida-public/AB6AXuDIYAWU-WPJUgXnyITRyYhwNw6EU4mCRWzPtMmc9FIXayxT1ncx7Bqxwx9RAdthW8hjwPRbG8StUj-o3BnVZwQZMO9W6YJJiwtzsql3NaFSeSkjUadn8Tn6Mt3wIhgsHbRcB8dAa09RX7x6ReIWaEySI-BbDOYdGNhDvap68wId2NloewU5aAeBMWXOLN10zeptvvTxkXyoSOW4V6wHhgR1fcoxSwVtOmeS81T3d_GzV_QtJTCDHzUfLz0ig1CPqHGoE_78Gp_blVBJ"
+        'type-t1': "https://lh3.googleusercontent.com/aida-public/AB6AXuDFrE0F00x1o-GZkbv8XpfY-7eAzRxeoBxUJV_lMLpQE00JTLk-_NeTBLcYu3DDpUy_NPlCJ2qhnZZlBjKA7u0EnmqGiEWpqumR7PCeQGs6RC_7B4F0Yvit56IDQSK6wvRqUT2G-LieonS38V8--JMMIc8fGmkTh0_d33TK8xNAeW7l-DTogpzGHgbyMtPsFfrhIfsthOUj_69ulI3N4yqw4qm68KMaTnWIxo6shckM52WOnIAVrAwZEgaNg2CEtAYlZ1GleBv8_ocx"
     };
 
     const modelData = {
         'type-a': {
-            name: 'Type-A (스탠다드)',
-            shortName: 'Type-A',
-            exclusive: '84.52',
-            exclusivePyeong: '25.6',
-            common: '21.15',
-            commonPyeong: '6.4',
-            total: '105.67',
-            totalPyeong: '32.0',
-            zones: [
-                { name: 'LDK (거실/주방)', area: '32.4', ratio: 45, icon: 'chair' },
-                { name: '마스터룸', area: '14.5', ratio: 25, icon: 'bed' },
-                { name: '침실 2 / 서재', area: '10.2', ratio: 18, icon: 'single_bed' },
-                { name: '욕실 & 파우더룸', area: '6.8', ratio: 12, icon: 'bathtub' },
-                { name: '현관/복도', area: '5.2', ratio: 10, icon: 'door_front' },
+            name: 'Type A (스탠다드)',
+            desc: '컴팩트한 다락방 구조, 실속형 세컨하우스',
+            area: '33.05', // 10평
+            price: '1.5억 ~',
+            features: [
+                { icon: 'bed', text: '1룸 + 다락' },
+                { icon: 'shower', text: '욕실 1개' },
+                { icon: 'ac_unit', text: '시스템 에어컨' },
             ],
-            costRange: '1.5억 ~ 3억'
+            zones: [
+                 { name: '거실/주방', area: '15.5', ratio: 0.47 },
+                 { name: '침실', area: '9.0', ratio: 0.27 },
+                 { name: '욕실', area: '4.5', ratio: 0.14 },
+                 { name: '다락', area: '4.0', ratio: 0.12 },
+            ],
+            units: [
+                { id: '101호', floor: '1F', direction: '남향', price: '1.55억', status: 'available', isFlipped: false },
+                { id: '102호', floor: '1F', direction: '남동향', price: '1.52억', status: 'contracted', isFlipped: true },
+                { id: '201호', floor: '2F', direction: '남향', price: '1.60억', status: 'available', isFlipped: false },
+            ]
         },
         'type-b': {
-            name: 'Type-B (테라스형)',
-            shortName: 'Type-B',
-            exclusive: '92.40',
-            exclusivePyeong: '27.9',
-            common: '24.80',
-            commonPyeong: '7.5',
-            total: '117.20',
-            totalPyeong: '35.4',
-            zones: [
-                { name: 'LDK + 테라스', area: '45.2', ratio: 50, icon: 'deck' },
-                { name: '마스터룸', area: '15.5', ratio: 20, icon: 'bed' },
-                { name: '침실 2', area: '11.0', ratio: 15, icon: 'single_bed' },
-                { name: '욕실 & 스파', area: '8.5', ratio: 10, icon: 'hot_tub' },
-                { name: '현관/팬트리', area: '6.5', ratio: 8, icon: 'door_front' },
+            name: 'Type B (테라스형)',
+            desc: '넓은 테라스가 있는 여유로운 휴식 공간',
+            area: '39.66', // 12평
+            price: '2.2억 ~',
+            features: [
+                { icon: 'deck', text: '광폭 테라스' },
+                { icon: 'bed', text: '2룸' },
+                { icon: 'hot_tub', text: '자쿠지 옵션' },
             ],
-            costRange: '2.2억 ~ 3.5억'
+            zones: [
+                 { name: '거실', area: '14.0', ratio: 0.35 },
+                 { name: '주방/다이닝', area: '10.0', ratio: 0.25 },
+                 { name: '침실', area: '10.0', ratio: 0.25 },
+                 { name: '욕실', area: '5.66', ratio: 0.15 },
+            ],
+            units: [
+                { id: '103호', floor: '1F', direction: '남향', price: '2.25억', status: 'available', isFlipped: false },
+                { id: '203호', floor: '2F', direction: '남서향', price: '2.30억', status: 'available', isFlipped: true },
+            ]
         },
         'type-c': {
-            name: 'Type-C (패밀리)',
-            shortName: 'Type-C',
-            exclusive: '115.50',
-            exclusivePyeong: '34.9',
-            common: '23.00',
-            commonPyeong: '6.9',
-            total: '138.50',
-            totalPyeong: '41.8',
-            zones: [
-                { name: 'LDK (대면형)', area: '52.0', ratio: 48, icon: 'chair' },
-                { name: '마스터룸', area: '18.5', ratio: 18, icon: 'bed' },
-                { name: '침실 2', area: '12.0', ratio: 12, icon: 'single_bed' },
-                { name: '침실 3', area: '10.5', ratio: 10, icon: 'child_care' },
-                { name: '욕실 (2개소)', area: '8.0', ratio: 12, icon: 'bathtub' },
+            name: 'Type C (패밀리)',
+            desc: '온 가족이 함께 즐기는 넉넉한 공간',
+            area: '49.58', // 15평
+            price: '3.5억 ~',
+            features: [
+                { icon: 'family_restroom', text: '3-4인 추천' },
+                { icon: 'yard', text: '개별 정원' },
+                { icon: 'countertops', text: '아일랜드 주방' },
             ],
-            costRange: '3.5억 ~ 4.5억'
+            zones: [
+                 { name: '거실', area: '18.0', ratio: 0.36 },
+                 { name: '주방', area: '12.0', ratio: 0.24 },
+                 { name: '마스터룸', area: '12.0', ratio: 0.24 },
+                 { name: '게스트룸', area: '7.58', ratio: 0.16 },
+            ],
+            units: [
+                { id: '105호', floor: '1F', direction: '남향', price: '3.6억', status: 'available', isFlipped: false },
+            ]
         },
         'type-t1': {
             name: 'Town T1 (듀플렉스)',
-            shortName: 'Town T1',
-            exclusive: '130.00',
-            exclusivePyeong: '39.3',
-            common: '22.00',
-            commonPyeong: '6.7',
-            total: '152.00',
-            totalPyeong: '46.0',
-            zones: [
-                { name: '1F LDK + 중정', area: '60.0', ratio: 45, icon: 'park' },
-                { name: '2F 마스터존', area: '25.5', ratio: 20, icon: 'bed' },
-                { name: '2F 서브룸', area: '20.0', ratio: 15, icon: 'single_bed' },
-                { name: '프라이빗 가든', area: '30.0', ratio: 0, icon: 'yard' }, // Excluded from chart but listed
-                { name: '욕실 (3개소)', area: '10.5', ratio: 20, icon: 'hot_tub' },
+            desc: '프라이버시가 보장되는 2층 독채 타운하우스',
+            area: '92.56', // 28평
+            price: '5.2억 ~',
+            features: [
+                { icon: 'stairs', text: '2층 독채' },
+                { icon: 'fence', text: '프라이빗 마당' },
+                { icon: 'bathtub', text: '욕실 2개' },
             ],
-            costRange: '5.2억 ~ 6.5억'
+            zones: [
+                 { name: '1F 거실/주방', area: '45.0', ratio: 0.48 },
+                 { name: '2F 마스터존', area: '30.0', ratio: 0.32 },
+                 { name: '2F 서브룸', area: '17.56', ratio: 0.20 },
+            ],
+            units: [
+                { id: 'T-01', floor: 'Duplex', direction: '남향', price: '5.5억', status: 'available', isFlipped: false },
+                { id: 'T-02', floor: 'Duplex', direction: '남동향', price: '5.3억', status: 'available', isFlipped: true },
+            ]
         }
-    };
-    
-    // Mock data for available units
-    const unitData: Record<'type-a' | 'type-b' | 'type-c' | 'type-t1', Array<{id: string, floor: string, direction: string, price: string, status: 'available' | 'reserved' | 'sold', isFlipped?: boolean}>> = {
-        'type-a': [
-            { id: '101호', floor: '1F', direction: '남향', price: '2.8억', status: 'available', isFlipped: false },
-            { id: '102호', floor: '1F', direction: '동향', price: '2.7억', status: 'reserved', isFlipped: true },
-            { id: '103호', floor: '1F', direction: '남향', price: '2.85억', status: 'available', isFlipped: false },
-            { id: '201호', floor: '2F', direction: '남향', price: '2.95억', status: 'sold', isFlipped: true },
-        ],
-        'type-b': [
-            { id: '202호', floor: '2F', direction: '남서향', price: '3.3억', status: 'available', isFlipped: false },
-            { id: '203호', floor: '2F', direction: '남향', price: '3.4억', status: 'available', isFlipped: true },
-            { id: '301호', floor: '3F', direction: '남향', price: '3.5억', status: 'reserved', isFlipped: false },
-        ],
-        'type-c': [
-            { id: '105호', floor: '1F', direction: '남동향', price: '4.2억', status: 'available', isFlipped: false },
-            { id: '205호', floor: '2F', direction: '남향', price: '4.5억', status: 'sold', isFlipped: true },
-        ],
-        'type-t1': [
-            { id: 'T-01', floor: '독채', direction: '남향', price: '6.2억', status: 'available', isFlipped: false },
-            { id: 'T-02', floor: '독채', direction: '남서향', price: '6.1억', status: 'available', isFlipped: true },
-        ]
     };
 
     const currentData = modelData[selectedModel];
-    const currentUnits = unitData[selectedModel];
-    const currentImages = modelImages[selectedModel];
-
-    const displayImage = customHeroImage || currentImages.main;
-
-    const handleUnitSelect = (unit: any) => {
-        setActiveUnit(unit);
-        setActiveTab('overview');
-        // Small delay to ensure tab switch happens before scroll
-        setTimeout(() => {
-            const viewer = document.getElementById('floor-plan-viewer');
-            if (viewer) {
-                viewer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        }, 50);
-    };
 
     return (
-        <div className="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden pb-24 bg-white dark:bg-background-dark transition-colors">
-            {/* Header */}
-            <header className="sticky top-0 z-50 flex items-center bg-white dark:bg-surface-dark px-4 py-3 justify-between shadow-sm border-b border-transparent dark:border-gray-800 transition-colors">
-                <div onClick={() => navigate(-1)} className="flex size-10 items-center justify-center rounded-full active:bg-gray-100 dark:active:bg-gray-800 cursor-pointer text-[#111518] dark:text-white">
-                    <span className="material-symbols-outlined">arrow_back</span>
-                </div>
-                <h2 className="text-[#111518] dark:text-white text-lg font-bold leading-tight flex-1 text-center pl-2">{currentData.shortName} 상세정보</h2>
-                 <div className="flex gap-1">
-                    <div onClick={toggleTheme} className="flex size-10 items-center justify-center rounded-full active:bg-gray-100 dark:active:bg-gray-800 cursor-pointer text-[#111518] dark:text-white">
-                        <span className="material-symbols-outlined text-[20px]">{isDark ? 'light_mode' : 'dark_mode'}</span>
+        <div className="relative min-h-screen bg-background-light dark:bg-background-dark pb-24 transition-colors">
+            {/* Header with Hero */}
+            <header className="relative w-full h-[40vh] min-h-[300px]">
+                {heroViewMode === '3d' ? (
+                    <ThreeViewer modelType={selectedModel} onClose={() => setHeroViewMode('default')} />
+                ) : heroViewMode === '360' ? (
+                     <PanoramaViewer imageUrl={customHeroImage || modelImages[selectedModel].main} onClose={() => setHeroViewMode('default')} />
+                ) : (
+                    <div 
+                        className="w-full h-full bg-cover bg-center transition-all duration-500"
+                        style={{ backgroundImage: `url("${customHeroImage || modelImages[selectedModel].main}")` }}
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-background-light dark:to-background-dark"></div>
+                        
+                        {/* Top Nav */}
+                        <div className="absolute top-0 left-0 w-full p-4 flex justify-between items-center z-10">
+                            <button onClick={() => navigate(-1)} className="size-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md text-white hover:bg-black/30 transition-colors">
+                                <span className="material-symbols-outlined">arrow_back</span>
+                            </button>
+                            <div className="flex gap-2">
+                                <button onClick={() => setIsCompareModalOpen(true)} className="px-3 py-1.5 rounded-full bg-black/20 backdrop-blur-md text-white text-xs font-bold hover:bg-black/30 transition-colors border border-white/10 flex items-center gap-1">
+                                    <span className="material-symbols-outlined text-[16px]">compare_arrows</span>
+                                    비교하기
+                                </button>
+                                <button onClick={toggleTheme} className="size-10 flex items-center justify-center rounded-full bg-black/20 backdrop-blur-md text-white hover:bg-black/30 transition-colors">
+                                    <span className="material-symbols-outlined text-[20px]">{isDark ? 'light_mode' : 'dark_mode'}</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Hero Controls */}
+                        <div className="absolute bottom-6 right-4 flex gap-2 z-10">
+                            <button onClick={() => setHeroViewMode('360')} className="size-10 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-md text-gray-800 dark:text-white flex items-center justify-center shadow-lg hover:scale-105 transition-transform">
+                                <span className="material-symbols-outlined">kq</span>
+                            </button>
+                            <button onClick={() => setHeroViewMode('3d')} className="size-10 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-md text-gray-800 dark:text-white flex items-center justify-center shadow-lg hover:scale-105 transition-transform">
+                                <span className="material-symbols-outlined">view_in_ar</span>
+                            </button>
+                        </div>
                     </div>
-                    <div className="flex size-10 items-center justify-center rounded-full active:bg-gray-100 dark:active:bg-gray-800 cursor-pointer text-[#111518] dark:text-white">
-                        <span className="material-symbols-outlined">share</span>
-                    </div>
-                </div>
+                )}
             </header>
 
-            {/* Hero Section */}
-            {heroViewMode === '360' ? (
-                <PanoramaViewer imageUrl={displayImage} onClose={() => setHeroViewMode('default')} />
-            ) : heroViewMode === '3d' ? (
-                <ThreeViewer modelType={selectedModel} onClose={() => setHeroViewMode('default')} />
-            ) : (
-                <div className="relative w-full h-72 bg-gray-200 dark:bg-gray-800 group">
-                    <div className="absolute inset-0 bg-cover bg-center transition-all duration-500" style={{ backgroundImage: `url("${displayImage}")` }}></div>
-                    <div className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-black/20"></div>
-                    
-                    <div className="absolute bottom-4 left-4 flex gap-1 z-10">
-                        <span className="bg-black/60 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-medium inline-block">남한강변 뷰</span>
-                        <span className="bg-primary text-white px-3 py-1 rounded-full text-xs font-medium inline-block">인기 모델</span>
+            {/* Content Body */}
+            <div className="px-4 -mt-6 relative z-10">
+                <div className="bg-white dark:bg-surface-dark rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 p-5 mb-4">
+                    <div className="flex justify-between items-start mb-2">
+                        <div>
+                            <span className="text-primary text-xs font-bold uppercase tracking-wider mb-1 block">{selectedModel.replace('-', ' ').toUpperCase()}</span>
+                            <div className="flex items-center gap-2">
+                                <h1 className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">{currentData.name.split(' (')[0]}</h1>
+                                <button 
+                                    onClick={() => navigate('/booking', { state: { model: selectedModel } })}
+                                    className="ml-1 px-2.5 py-1 bg-primary/10 hover:bg-primary/20 text-primary rounded-full text-[10px] font-bold transition-colors flex items-center gap-1"
+                                >
+                                    <span className="material-symbols-outlined text-[14px]">calendar_add_on</span>
+                                    방문예약
+                                </button>
+                            </div>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{currentData.desc}</p>
+                        </div>
+                        <div className="text-right">
+                             <span className="block text-xl font-extrabold text-gray-900 dark:text-white">{currentData.price}</span>
+                             <span className="text-xs text-gray-400">분양가 (VAT 별도)</span>
+                        </div>
                     </div>
 
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center gap-4 z-20 opacity-90 hover:opacity-100 transition-opacity">
-                        <button 
-                            onClick={() => setHeroViewMode('360')}
-                            className="flex flex-col items-center gap-2 group/btn"
-                        >
-                            <div className="size-14 rounded-full bg-white/20 backdrop-blur-md border border-white/40 flex items-center justify-center shadow-lg group-hover/btn:scale-110 transition-transform duration-300">
-                                <span className="material-symbols-outlined text-white text-3xl drop-shadow-md">ZK_360</span>
-                            </div>
-                            <span className="text-white font-bold text-xs drop-shadow-md bg-black/40 px-2 py-0.5 rounded-full backdrop-blur-sm">360° VR</span>
-                        </button>
-                        <button 
-                            onClick={() => setHeroViewMode('3d')}
-                            className="flex flex-col items-center gap-2 group/btn"
-                        >
-                            <div className="size-14 rounded-full bg-primary/80 backdrop-blur-md border border-white/40 flex items-center justify-center shadow-lg group-hover/btn:scale-110 transition-transform duration-300">
-                                <span className="material-symbols-outlined text-white text-3xl drop-shadow-md">view_in_ar</span>
-                            </div>
-                            <span className="text-white font-bold text-xs drop-shadow-md bg-black/40 px-2 py-0.5 rounded-full backdrop-blur-sm">3D 모델</span>
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            {/* Gallery Carousel */}
-            <div className="bg-white dark:bg-surface-dark py-4 border-b dark:border-gray-800 transition-colors">
-                <div className="px-4 mb-3 flex justify-between items-end">
-                    <h3 className="text-sm font-bold text-gray-500 dark:text-gray-400">갤러리 투어</h3>
-                    <span className="text-xs text-primary font-medium">
-                        {currentImages.gallery.length}장의 사진
-                    </span>
-                </div>
-                
-                <div className="flex w-full overflow-x-auto no-scrollbar px-4 pb-4 gap-3 snap-x snap-mandatory pt-2">
-                    {currentImages.gallery.map((item, idx) => (
-                        <button 
-                            key={idx} 
-                            onClick={() => {
-                                setCustomHeroImage(item.img);
-                                setHeroViewMode('default');
-                            }}
-                            className={`relative flex-none w-[200px] aspect-[4/3] rounded-xl overflow-hidden snap-center group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${displayImage === item.img ? 'ring-2 ring-primary ring-offset-2 dark:ring-offset-gray-900' : ''}`}
-                        >
-                            <img 
-                                src={item.img} 
-                                alt={item.title} 
-                                loading="lazy" 
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
-                            <span className="absolute bottom-3 left-3 text-white text-sm font-bold shadow-sm">
-                                {item.title}
-                            </span>
-                            {displayImage === item.img && (
-                                 <div className="absolute top-2 right-2 bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                                    선택됨
-                                 </div>
-                            )}
-                        </button>
-                    ))}
-                </div>
-            </div>
-
-            {/* Info */}
-            <div className="px-4 py-5 mb-2 dark:text-white">
-                <div className="flex flex-col gap-1 mb-4">
-                     <div className="flex items-center justify-between">
-                         <h1 className="text-2xl font-bold leading-tight">리버사이드 모듈러 {currentData.shortName}</h1>
-                         <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1 shrink-0 overflow-x-auto no-scrollbar max-w-[140px] md:max-w-none">
-                                {['type-a', 'type-b', 'type-c', 'type-t1'].map((t) => (
-                                    <button 
-                                        key={t}
-                                        onClick={() => setSelectedModel(t as any)}
-                                        className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all whitespace-nowrap ${selectedModel === t ? 'bg-white dark:bg-gray-700 shadow-sm text-primary dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}
-                                    >
-                                        {t === 'type-t1' ? 'Town T1' : t.toUpperCase().replace('-', ' ')}
-                                    </button>
-                                ))}
-                            </div>
-                     </div>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">경기도 양평군 · 모듈러 단독주택</p>
-                </div>
-                
-                <div className="p-4 bg-primary/5 dark:bg-primary/10 rounded-xl border border-primary/10 dark:border-primary/20 mb-5">
-                    <p className="text-sm text-primary font-bold mb-1">예상 건축비</p>
-                    <h2 className="text-3xl font-extrabold text-[#111518] dark:text-white tracking-tight">{currentData.costRange} <span className="text-base font-medium text-gray-500 dark:text-gray-400">KRW</span></h2>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">* 대지 비용 별도 / 옵션 선택에 따라 변동</p>
-                </div>
-
-                {/* Available Units Section */}
-                <div className="mb-5">
-                    <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-base font-bold dark:text-white flex items-center gap-2">
-                            <span className="material-symbols-outlined text-primary text-[20px]">holiday_village</span>
-                            분양 가능 호실
-                        </h3>
-                        <span className="text-xs text-gray-500 font-medium bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded text-center">실시간 현황</span>
-                    </div>
-                    
-                    <div className="flex overflow-x-auto no-scrollbar gap-3 pb-2 -mx-4 px-4 snap-x snap-mandatory">
-                        {currentUnits.map((unit) => (
-                            <div 
-                                key={unit.id} 
-                                onClick={() => handleUnitSelect(unit)}
-                                className={`
-                                    min-w-[140px] snap-center p-3 rounded-xl border bg-white dark:bg-surface-dark shadow-sm flex flex-col gap-2 relative overflow-hidden cursor-pointer transition-all
-                                    ${activeUnit?.id === unit.id ? 'border-primary ring-1 ring-primary' : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'}
-                                `}
+                    <div className="flex gap-2 mt-4 overflow-x-auto no-scrollbar pb-1">
+                        {['type-a', 'type-b', 'type-c', 'type-t1'].map((m) => (
+                            <button 
+                                key={m}
+                                onClick={() => setSelectedModel(m as any)}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all border ${selectedModel === m ? 'bg-primary text-white border-primary' : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700'}`}
                             >
-                                {unit.status === 'sold' && <div className="absolute inset-0 bg-gray-100/80 dark:bg-gray-900/80 z-10 flex items-center justify-center font-bold text-gray-500 dark:text-gray-400 text-lg">분양완료</div>}
-                                {unit.status === 'reserved' && <div className="absolute top-0 right-0 bg-orange-500 text-white text-[10px] px-2 py-1 rounded-bl-lg font-bold z-10">예약중</div>}
-                                
-                                <div className="flex justify-between items-start">
-                                    <span className="text-lg font-bold text-gray-900 dark:text-white">{unit.id}</span>
-                                    <span className="text-xs font-medium text-gray-500 bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded">{unit.floor}</span>
-                                </div>
-                                <div className="flex flex-col gap-0.5">
-                                    <span className="text-xs text-gray-500 dark:text-gray-400">{unit.direction}</span>
-                                    <span className={`text-sm font-bold ${unit.status === 'sold' ? 'text-gray-400' : 'text-primary'}`}>{unit.price}</span>
-                                </div>
-
-                                <div className="flex gap-1.5 mt-2">
-                                     {unit.status === 'available' && (
-                                        <button 
-                                            onClick={(e) => { e.stopPropagation(); setSelectedUnit(unit); }}
-                                            className="flex-1 py-1.5 rounded-lg border border-gray-200 dark:border-gray-600 text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors z-20 relative"
-                                        >
-                                            상세
-                                        </button>
-                                     )}
-                                     <button 
-                                        disabled={unit.status !== 'available'} 
-                                        className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-colors ${unit.status === 'available' ? 'bg-black dark:bg-white text-white dark:text-black hover:opacity-80' : 'w-full bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed'}`}
-                                     >
-                                        {unit.status === 'available' ? '상담' : (unit.status === 'reserved' ? '대기신청' : '마감')}
-                                    </button>
-                                </div>
-                            </div>
+                                {m.replace('type-', 'Type ').replace('type-t1', 'Town T1')}
+                            </button>
                         ))}
                     </div>
                 </div>
 
-                <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-                    남한강변의 여유를 담은 프리미엄 모듈러 주택입니다. 불필요한 공정을 줄여 합리적인 가격으로 만나는 세컨드 하우스를 제안합니다. 높은 단열 성능과 모던한 디자인이 결합된 {currentData.shortName} 모델입니다.
-                </p>
-            </div>
-
-            {/* Tabs */}
-            <div className="sticky top-[60px] z-40 bg-white dark:bg-surface-dark border-b border-gray-100 dark:border-gray-800 transition-colors">
-                <div className="flex justify-between px-2">
-                    <button 
-                        onClick={() => setActiveTab('overview')} 
-                        className={`flex-1 py-3 text-sm transition-colors ${activeTab === 'overview' ? 'font-bold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 dark:text-gray-400'}`}
-                    >
-                        개요/평면
-                    </button>
-                    <button 
-                         onClick={() => setActiveTab('options')} 
-                         className={`flex-1 py-3 text-sm transition-colors ${activeTab === 'options' ? 'font-bold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 dark:text-gray-400'}`}
-                    >
-                        상세옵션
-                    </button>
-                    <button 
-                         onClick={() => setActiveTab('delivery')} 
-                         className={`flex-1 py-3 text-sm transition-colors ${activeTab === 'delivery' ? 'font-bold text-primary border-b-2 border-primary' : 'font-medium text-gray-500 dark:text-gray-400'}`}
-                    >
-                        납기안내
-                    </button>
+                {/* Tabs */}
+                <div className="flex border-b border-gray-200 dark:border-gray-800 mb-4 sticky top-0 bg-background-light dark:bg-background-dark z-20 pt-2">
+                    {[
+                        { id: 'overview', label: '개요/평면/호실' },
+                        { id: 'options', label: '옵션/갤러리' }
+                    ].map(tab => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id as any)}
+                            className={`flex-1 py-3 text-sm font-bold relative ${activeTab === tab.id ? 'text-primary' : 'text-gray-500 dark:text-gray-400'}`}
+                        >
+                            {tab.label}
+                            {activeTab === tab.id && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-t-full"></div>}
+                        </button>
+                    ))}
                 </div>
-            </div>
 
-            {/* Content Area */}
-            <div className="min-h-[300px]">
-                {activeTab === 'overview' && (
-                    <div className="px-4 py-6 animate-fadeIn">
-                        <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-lg font-bold dark:text-white">공간 구성 & 평면도</h3>
-                        </div>
-                        
-                        <div className="flex flex-col gap-2 mb-6" id="floor-plan-viewer">
-                            <div className="flex justify-between items-center">
-                                <h4 className="text-sm font-bold text-gray-900 dark:text-white">
-                                    {activeUnit ? `${activeUnit.id} 평면도` : `${currentData.name} 평면도`}
-                                </h4>
-                                <span className="text-xs text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">1:50 Scale</span>
-                            </div>
+                {/* Tab Content */}
+                <div className="flex flex-col gap-6 animate-fadeIn">
+                    {activeTab === 'overview' && (
+                        <>
+                            <section>
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">평면도 및 공간 구성</h3>
+                                <FloorPlanViewer imageUrl={floorPlanImages[selectedModel]} className="aspect-[4/3] mb-4" />
+                                <ZoneVisualization zones={currentData.zones} />
+                            </section>
                             
-                            <FloorPlanViewer 
-                                imageUrl={floorPlanImages[selectedModel]} 
-                                flip={activeUnit ? activeUnit.isFlipped : (selectedModel === 'type-b')} 
-                            />
-                            
-                            {activeUnit && (
-                                <div className="text-center text-xs text-primary font-bold bg-primary/5 p-2 rounded animate-pulse">
-                                    * {activeUnit.id} 맞춤형 평면도가 표시되고 있습니다.
+                            <section>
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">주요 스펙</h3>
+                                <div className="grid grid-cols-3 gap-3">
+                                    {currentData.features.map((f, i) => (
+                                        <div key={i} className="bg-white dark:bg-surface-dark p-3 rounded-xl border border-gray-100 dark:border-gray-800 flex flex-col items-center gap-2 text-center shadow-sm">
+                                            <span className="material-symbols-outlined text-primary">{f.icon}</span>
+                                            <span className="text-xs font-bold text-gray-700 dark:text-gray-300">{f.text}</span>
+                                        </div>
+                                    ))}
                                 </div>
-                            )}
+                            </section>
 
-                            <button 
-                                onClick={() => setIsCompareModalOpen(true)}
-                                className="w-full mt-2 py-3 rounded-xl border border-primary/30 bg-primary/5 text-primary font-bold flex items-center justify-center gap-2 hover:bg-primary/10 transition-colors"
-                            >
-                                <span className="material-symbols-outlined">compare_arrows</span>
-                                전체 모델 라인업 비교하기
-                            </button>
-                        </div>
+                            {/* Added Unit List Section to Overview */}
+                            <section className="mt-4 pt-6 border-t border-gray-200 dark:border-gray-800">
+                                <div className="flex justify-between items-end mb-3">
+                                   <h3 className="text-lg font-bold text-gray-900 dark:text-white">잔여 호실 리스트</h3>
+                                   <span className="text-xs text-primary font-bold bg-primary/10 px-2 py-1 rounded">실시간 업데이트</span>
+                                </div>
+                                <div className="flex flex-col gap-3">
+                                   {currentData.units.map((unit) => (
+                                       <div 
+                                           key={unit.id} 
+                                           onClick={() => setSelectedUnit(unit)}
+                                           className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${
+                                               unit.status === 'contracted' 
+                                                   ? 'bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700 opacity-60 pointer-events-none' 
+                                                   : 'bg-white dark:bg-surface-dark border-gray-200 dark:border-gray-700 hover:border-primary shadow-sm hover:shadow-md'
+                                           }`}
+                                       >
+                                           <div>
+                                               <div className="flex items-center gap-2 mb-1">
+                                                   <span className="text-base font-bold text-gray-900 dark:text-white">{unit.id}</span>
+                                                   {unit.status === 'contracted' && <span className="text-[10px] bg-gray-500 text-white px-1.5 py-0.5 rounded">분양완료</span>}
+                                                   {unit.status === 'available' && <span className="text-[10px] bg-green-500 text-white px-1.5 py-0.5 rounded">즉시계약</span>}
+                                               </div>
+                                               <span className="text-xs text-gray-500 dark:text-gray-400">{unit.floor} • {unit.direction}</span>
+                                           </div>
+                                           <div className="text-right">
+                                               <span className={`block text-sm font-bold ${unit.status === 'contracted' ? 'text-gray-400' : 'text-primary'}`}>{unit.price}</span>
+                                               <span className="text-xs text-gray-400 underline">상세보기</span>
+                                           </div>
+                                       </div>
+                                   ))}
+                                </div>
+                           </section>
+                        </>
+                    )}
 
-                         {/* Detailed Zone Area Breakdown with Interactive Chart */}
-                         <div className="mb-6 pt-2">
-                            <h3 className="text-lg font-bold dark:text-white mb-4">공간별 상세 면적 (Zone Breakdown)</h3>
-                            <ZoneVisualization zones={currentData.zones} />
-                        </div>
-
-                        {/* Table */}
-                        <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
-                            <table className="w-full text-sm text-left">
-                                <thead className="bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-                                    <tr>
-                                        <th className="px-4 py-3 font-medium">구분</th>
-                                        <th className="px-4 py-3 font-medium text-right">면적 (㎡)</th>
-                                        <th className="px-4 py-3 font-medium text-right">평형</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-gray-200 dark:divide-gray-700 text-gray-900 dark:text-gray-200">
-                                    <tr className="bg-white dark:bg-surface-dark">
-                                        <td className="px-4 py-3 font-medium">전용 면적</td>
-                                        <td className="px-4 py-3 text-right">{currentData.exclusive}</td>
-                                        <td className="px-4 py-3 text-right">{currentData.exclusivePyeong}</td>
-                                    </tr>
-                                    <tr className="bg-white dark:bg-surface-dark">
-                                        <td className="px-4 py-3 font-medium">공용 면적</td>
-                                        <td className="px-4 py-3 text-right">{currentData.common}</td>
-                                        <td className="px-4 py-3 text-right">{currentData.commonPyeong}</td>
-                                    </tr>
-                                    <tr className="bg-gray-50/50 dark:bg-gray-800/50">
-                                        <td className="px-4 py-3 font-bold text-primary">합계</td>
-                                        <td className="px-4 py-3 text-right font-bold">{currentData.total}</td>
-                                        <td className="px-4 py-3 text-right font-bold">{currentData.totalPyeong}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                         <div className="mt-4 p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700 flex items-start gap-2">
-                            <span className="material-symbols-outlined text-gray-400 text-[18px] mt-0.5">info</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-                                * 발코니 확장 면적이 포함된 실사용 면적 기준입니다.<br/>
-                                * 세부 치수는 시공 과정에서 일부 변경될 수 있습니다.
-                            </p>
-                        </div>
-                    </div>
-                )}
-                
-                {activeTab === 'options' && (
-                    <div className="px-4 py-6 flex flex-col gap-6 animate-fadeIn">
-                        <div>
-                             <h3 className="text-lg font-bold dark:text-white mb-3">기본 제공 옵션</h3>
+                    {activeTab === 'options' && (
+                        <section>
                              <div className="grid grid-cols-2 gap-3">
-                                {[
-                                    {icon: 'ac_unit', text: '시스템 에어컨', sub: '거실/안방 (2대)'},
-                                    {icon: 'kitchen', text: '빌트인 냉장고', sub: '비스포크 키친핏'},
-                                    {icon: 'soup_kitchen', text: '인덕션', sub: '3구 하이브리드'},
-                                    {icon: 'door_front', text: '3연동 중문', sub: '단열/소음 차단'},
-                                    {icon: 'nest_cam_iq_outdoor', text: 'IoT 월패드', sub: '스마트홈 연동'},
-                                    {icon: 'window', text: '시스템 창호', sub: '3중 로이유리'},
-                                ].map((opt, i) => (
-                                    <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
-                                        <span className="material-symbols-outlined text-primary">{opt.icon}</span>
-                                        <div>
-                                            <p className="font-bold text-sm dark:text-white">{opt.text}</p>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{opt.sub}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                             </div>
-                        </div>
-                        
-                        <div>
-                             <h3 className="text-lg font-bold dark:text-white mb-3">선택 옵션 (유상)</h3>
-                             <ul className="space-y-2">
-                                <li className="flex justify-between items-center p-3 rounded-lg border border-gray-200 dark:border-gray-700">
-                                    <span className="text-sm font-medium dark:text-gray-200">태양광 패널 (3kW)</span>
-                                    <span className="text-sm font-bold text-primary">+ 350만</span>
-                                </li>
-                                <li className="flex justify-between items-center p-3 rounded-lg border border-gray-200 dark:border-gray-700">
-                                    <span className="text-sm font-medium dark:text-gray-200">야외 자쿠지 설치</span>
-                                    <span className="text-sm font-bold text-primary">+ 800만</span>
-                                </li>
-                                <li className="flex justify-between items-center p-3 rounded-lg border border-gray-200 dark:border-gray-700">
-                                    <span className="text-sm font-medium dark:text-gray-200">조경 패키지 (프리미엄)</span>
-                                    <span className="text-sm font-bold text-primary">+ 1,200만</span>
-                                </li>
-                             </ul>
-                        </div>
-                    </div>
-                )}
-
-                {activeTab === 'delivery' && (
-                    <div className="px-4 py-6 flex flex-col gap-6 animate-fadeIn">
-                        <div>
-                            <h3 className="text-lg font-bold dark:text-white mb-2">예상 입주 일정</h3>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                                계약일로부터 입주까지 <span className="text-primary font-bold">약 2.5개월</span> 소요됩니다.
-                                <br/>모듈러 공법으로 빠르고 정확하게 시공합니다.
-                            </p>
-                            
-                            <div className="relative border-l-2 border-gray-200 dark:border-gray-700 ml-3 space-y-8 py-2">
-                                {[
-                                    { step: '01', title: '계약 및 인허가', time: '약 2주', desc: '건축 인허가 접수 및 승인 대기' },
-                                    { step: '02', title: '공장 제작', time: '약 4주', desc: '스마트 팩토리에서 정밀 제작 진행' },
-                                    { step: '03', title: '기초 공사', time: '제작 병행', desc: '현장 토목 및 기초 매트 타설' },
-                                    { step: '04', title: '운송 및 설치', time: '3일', desc: '모듈 운송 및 현장 조립' },
-                                    { step: '05', title: '마감 및 입주', time: '1주', desc: '내외부 마감, 준공 청소 및 입주' },
-                                ].map((item, i) => (
-                                    <div key={i} className="relative pl-6">
-                                        <div className="absolute -left-[9px] top-0 size-4 rounded-full bg-primary border-4 border-white dark:border-[#111c21]"></div>
-                                        <div className="flex flex-col gap-1">
-                                            <span className="text-xs font-bold text-primary tracking-wider">STEP {item.step}</span>
-                                            <h4 className="font-bold text-base dark:text-white">{item.title} <span className="text-sm font-normal text-gray-500 ml-1">({item.time})</span></h4>
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">{item.desc}</p>
-                                        </div>
+                                {modelImages[selectedModel].gallery.map((item, idx) => (
+                                    <div 
+                                        key={idx} 
+                                        className="group relative rounded-xl overflow-hidden aspect-square cursor-pointer"
+                                        onClick={() => setCustomHeroImage(item.img)}
+                                    >
+                                        <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" style={{ backgroundImage: `url("${item.img}")` }}></div>
+                                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+                                        <span className="absolute bottom-2 left-2 text-white text-xs font-bold drop-shadow-md">{item.title}</span>
                                     </div>
                                 ))}
                             </div>
-                        </div>
-                        
-                         <div className="p-4 bg-blue-50 dark:bg-primary/10 rounded-xl text-sm text-blue-800 dark:text-blue-200 leading-relaxed">
-                            <p className="font-bold mb-1">📢 필독 사항</p>
-                            기상 악화나 인허가 지연 등 불가피한 사유로 일정이 변경될 수 있습니다. 정확한 일정은 계약 시 담당 매니저와 협의해주세요.
-                        </div>
-                    </div>
-                )}
-            </div>
-            
-            <div className="h-4"></div>
-            
-             <div className="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto bg-white dark:bg-surface-dark border-t border-gray-100 dark:border-gray-800 p-4 pb-8 z-50 transition-colors">
-                <div className="flex gap-3">
-                    <button onClick={() => navigate('/faq')} className="flex-1 flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-bold py-3.5 rounded-xl">
-                        <span className="material-symbols-outlined text-[20px]">call</span>
-                        상담 문의
-                    </button>
-                    <button onClick={() => navigate('/booking')} className="flex-[1.5] flex items-center justify-center gap-2 bg-primary text-white font-bold py-3.5 rounded-xl shadow-lg shadow-primary/30">
-                        <span className="material-symbols-outlined text-[20px]">calendar_month</span>
-                        방문 예약
-                    </button>
+                        </section>
+                    )}
                 </div>
             </div>
 
-            <ComparisonModal isOpen={isCompareModalOpen} onClose={() => setIsCompareModalOpen(false)} />
+            {/* Modals */}
             <UnitDetailModal 
                 unit={selectedUnit} 
-                modelName={currentData.shortName} 
-                floorPlanUrl={floorPlanImages[selectedModel]} 
+                modelName={currentData.name}
+                floorPlanUrl={floorPlanImages[selectedModel]}
                 onClose={() => setSelectedUnit(null)} 
             />
+            <ComparisonModal 
+                isOpen={isCompareModalOpen} 
+                onClose={() => setIsCompareModalOpen(false)} 
+            />
+
+            {/* CTA */}
+            <div className="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto bg-white dark:bg-surface-dark border-t border-gray-100 dark:border-gray-800 p-4 pb-8 z-40 transition-colors">
+                <button onClick={() => navigate('/booking')} className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-white shadow-lg shadow-primary/30 transition-transform active:scale-[0.98]">
+                    <span className="material-symbols-outlined text-[20px]">calendar_month</span>
+                    <span className="text-base font-bold">모델하우스 방문 예약하기</span>
+                </button>
+            </div>
         </div>
     );
 };
