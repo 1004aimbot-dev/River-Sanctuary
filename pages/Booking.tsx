@@ -47,13 +47,13 @@ const Booking: React.FC = () => {
 
             <div className="flex-1 overflow-y-auto pb-24">
                 <div className="p-4 pt-2">
-                    <div className="flex min-h-[320px] flex-col gap-6 bg-cover bg-center bg-no-repeat rounded-xl items-center justify-end pb-8 p-4 relative overflow-hidden shadow-lg" 
-                        style={{ backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuBG-Mfji5-cOo3TteFaJ4o5lpaAzF4dn5rXX9yfkltynaJmZdKMwHVnOf-7kOFs8eWcyKbmHjEQnOyG5g0GbIlvlISogzP3q8w3geN--gtj3b7SNEq6GiTZP7eoP8t_im54_XvcoiKTFFbxiqe6JWJzsl02FNfqq6yRcIJKGyDAPe9LzUAcuUGNDpZHHfqy1Akmzz9lqDGbHXAegoX5WjyBoip9mn701HpZxmT3f6iN84mG_FbI3VJRdAiBUQQCW77Qd8fhLtBJRuE8")' }}>
-                        <div className="flex flex-col gap-2 text-center z-10">
-                            <h1 className="text-white text-3xl font-extrabold leading-tight tracking-tight">
+                    <div className="flex min-h-[320px] flex-col gap-6 bg-cover bg-center bg-no-repeat rounded-xl items-center justify-end pb-8 p-4 relative overflow-hidden shadow-lg transition-all hover:shadow-xl" 
+                        style={{ backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.5) 100%), url("https://images.unsplash.com/photo-1580587771525-78b9dba3b91d?q=80&w=2574&auto=format&fit=crop")' }}>
+                        <div className="flex flex-col gap-2 text-center z-10 text-shadow-sm">
+                            <h1 className="text-white text-3xl font-extrabold leading-tight tracking-tight drop-shadow-md">
                                 남한강변에서의<br/>특별한 삶을 경험하세요
                             </h1>
-                            <h2 className="text-white/90 text-sm font-medium leading-normal">
+                            <h2 className="text-white/95 text-sm font-medium leading-normal drop-shadow-sm">
                                 VIP 방문예약 및 분양 문의
                             </h2>
                         </div>

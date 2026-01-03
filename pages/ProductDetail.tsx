@@ -191,7 +191,7 @@ const ThreeViewer = ({ modelType, onClose }: { modelType: string; onClose: () =>
     }, [isAutoRotate]);
 
     return (
-         <div className="relative w-full h-72 bg-gray-900 rounded-lg overflow-hidden border border-gray-800">
+         <div className="relative w-full h-72 bg-[#111c21] rounded-lg overflow-hidden border border-gray-800">
             <div ref={containerRef} className="w-full h-full" />
              {/* Controls Overlay */}
              <div className="absolute top-4 right-4 z-10">
@@ -253,7 +253,7 @@ const PanoramaViewer = ({ imageUrl, onClose }: { imageUrl: string; onClose: () =
 
     return (
         <div 
-            className="relative w-full h-72 overflow-hidden cursor-move bg-gray-900 select-none touch-none"
+            className="relative w-full h-72 overflow-hidden cursor-move bg-[#111c21] select-none touch-none"
             onMouseDown={(e) => handleStart(e.clientX)}
             onMouseMove={(e) => handleMove(e.clientX)}
             onMouseUp={handleEnd}
@@ -294,7 +294,7 @@ const PanoramaViewer = ({ imageUrl, onClose }: { imageUrl: string; onClose: () =
     );
 };
 
-const FloorPlanViewer = ({ imageUrl, flip = false, className = "aspect-square" }: { imageUrl: string; flip?: boolean; className?: string }) => {
+const FloorPlanViewer = ({ imageUrl, flip = false, className = "aspect-square", transparent = false }: { imageUrl: string; flip?: boolean; className?: string; transparent?: boolean }) => {
     const [scale, setScale] = useState(1);
     const [translate, setTranslate] = useState({ x: 0, y: 0 });
     
@@ -396,9 +396,13 @@ const FloorPlanViewer = ({ imageUrl, flip = false, className = "aspect-square" }
         interaction.current.isDragging = false;
     };
 
+    const containerClasses = transparent 
+        ? `relative w-full ${className} touch-none select-none group overflow-hidden`
+        : `relative w-full ${className} bg-white dark:bg-[#1c2730] rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 touch-none select-none group`;
+
     return (
         <div 
-            className={`relative w-full ${className} bg-white dark:bg-surface-dark rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 touch-none select-none group`}
+            className={containerClasses}
             onMouseDown={onMouseDown}
             onMouseMove={onMouseMove}
             onMouseUp={onMouseUp}
@@ -415,7 +419,7 @@ const FloorPlanViewer = ({ imageUrl, flip = false, className = "aspect-square" }
                 }}
             >
                 <div 
-                    className={`w-[90%] h-[90%] bg-contain bg-no-repeat bg-center opacity-90 dark:opacity-80 dark:invert-[0.9] pointer-events-none ${flip ? '-scale-x-100' : ''}`}
+                    className={`w-[90%] h-[90%] bg-contain bg-no-repeat bg-center opacity-90 dark:opacity-80 dark:invert-[0.9] mix-blend-multiply dark:mix-blend-normal pointer-events-none ${flip ? '-scale-x-100' : ''}`}
                     style={{ backgroundImage: `url("${imageUrl}")` }}
                 />
             </div>
@@ -450,6 +454,7 @@ const FloorPlanViewer = ({ imageUrl, flip = false, className = "aspect-square" }
 
 const ZoneVisualization = ({ zones }: { zones: any[] }) => {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
+    const [isExpanded, setIsExpanded] = useState(false);
 
     // Calculate total ratio to normalize
     const totalRatio = useMemo(() => zones.reduce((acc, zone) => acc + zone.ratio, 0), [zones]);
@@ -512,64 +517,102 @@ const ZoneVisualization = ({ zones }: { zones: any[] }) => {
     }, [zones, totalRatio]);
 
     return (
-        <div className="flex flex-col md:flex-row items-center gap-6 bg-gray-50 dark:bg-gray-800/30 p-5 rounded-2xl border border-gray-100 dark:border-gray-800">
-            {/* Chart */}
-            <div className="relative size-40 shrink-0 select-none">
-                <svg viewBox="0 0 100 100" className="w-full h-full">
-                    {slices.map((slice: any) => (
-                        <path
-                            key={slice.index}
-                            d={slice.path}
-                            fill={slice.color}
-                            className={`transition-all duration-300 cursor-pointer hover:opacity-100 stroke-2 stroke-gray-50 dark:stroke-gray-900 ${activeIndex !== null && activeIndex !== slice.index ? 'opacity-30' : 'opacity-100'}`}
-                            onClick={() => setActiveIndex(activeIndex === slice.index ? null : slice.index)}
-                            onMouseEnter={() => setActiveIndex(slice.index)}
-                            onMouseLeave={() => setActiveIndex(null)}
-                        />
-                    ))}
-                    {/* Inner Circle for Donut Effect */}
-                    <circle cx="50" cy="50" r="28" className="fill-gray-50 dark:fill-[#1a2024]" />
-                </svg>
-                
-                {/* Center Text */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
-                        {activeIndex !== null ? '전용면적' : '총 면적'}
-                    </span>
-                    <span className="text-lg font-extrabold text-[#111518] dark:text-white leading-none mt-0.5">
-                        {activeIndex !== null ? zones[activeIndex].area : totalAreaSum}
-                    </span>
-                    <span className="text-[9px] text-gray-400 dark:text-gray-500 mt-0.5">㎡</span>
+        <div className="flex flex-col items-center gap-4 bg-gray-50 dark:bg-[#111c21]/50 p-5 rounded-2xl border border-gray-100 dark:border-gray-800 transition-all">
+            <div className="flex flex-col md:flex-row items-center justify-between w-full gap-6">
+                {/* Chart */}
+                <div className="relative size-40 shrink-0 select-none mx-auto md:mx-0">
+                    <svg viewBox="0 0 100 100" className="w-full h-full">
+                        {slices.map((slice: any) => (
+                            <path
+                                key={slice.index}
+                                d={slice.path}
+                                fill={slice.color}
+                                className={`transition-all duration-300 cursor-pointer hover:opacity-100 stroke-2 stroke-gray-50 dark:stroke-[#111c21] ${activeIndex !== null && activeIndex !== slice.index ? 'opacity-30' : 'opacity-100'}`}
+                                onClick={() => {
+                                    setActiveIndex(activeIndex === slice.index ? null : slice.index);
+                                    if (!isExpanded) setIsExpanded(true); // Auto expand on interaction
+                                }}
+                                onMouseEnter={() => setActiveIndex(slice.index)}
+                                onMouseLeave={() => setActiveIndex(null)}
+                            />
+                        ))}
+                        {/* Inner Circle for Donut Effect */}
+                        <circle cx="50" cy="50" r="28" className="fill-gray-50 dark:fill-[#1a2024]" />
+                    </svg>
+                    
+                    {/* Center Text */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                        <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
+                            {activeIndex !== null ? '전용면적' : '총 면적'}
+                        </span>
+                        <span className="text-lg font-extrabold text-[#111518] dark:text-white leading-none mt-0.5">
+                            {activeIndex !== null ? zones[activeIndex].area : totalAreaSum}
+                        </span>
+                        <span className="text-[9px] text-gray-400 dark:text-gray-500 mt-0.5">㎡</span>
+                    </div>
                 </div>
+
+                {/* Summary Text (Visible when collapsed) */}
+                {!isExpanded && (
+                    <div className="flex-1 text-center md:text-left">
+                         <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-1">공간 구성 요약</h4>
+                         <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+                            이 모델은 총 {zones.length}개의 주요 공간으로 구성되어 있습니다.<br/>
+                            자세한 면적 정보는 아래 버튼을 눌러 확인하세요.
+                         </p>
+                    </div>
+                )}
             </div>
 
-            {/* List */}
-            <div className="flex-1 w-full grid grid-cols-1 gap-2">
+            {/* Toggle Button */}
+            <button 
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-white dark:bg-[#1c2730] border border-gray-200 dark:border-gray-700 text-xs font-bold text-gray-600 dark:text-gray-300 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-all w-full md:w-auto justify-center"
+            >
+                {isExpanded ? '상세 면적 접기' : '상세 면적 및 비율 보기'}
+                <span className={`material-symbols-outlined text-[16px] transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}>expand_more</span>
+            </button>
+
+            {/* List (Collapsible) */}
+            <div className={`w-full grid grid-cols-1 gap-2 overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? 'max-h-[500px] opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
                 {zones.map((zone, i) => (
                     <div 
                         key={i}
                         onClick={() => setActiveIndex(activeIndex === i ? null : i)}
                         className={`
-                            flex items-center justify-between p-2.5 rounded-lg border cursor-pointer transition-all duration-200
+                            flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all duration-200
                             ${activeIndex === i 
-                                ? 'bg-white dark:bg-gray-700 border-primary/50 shadow-sm scale-[1.02]' 
-                                : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:border-primary/30'}
+                                ? 'bg-white dark:bg-[#1c2730] border-primary/50 shadow-sm scale-[1.01]' 
+                                : 'bg-white dark:bg-[#111c21] border-gray-100 dark:border-gray-700 hover:border-primary/30'}
                         `}
                     >
-                        <div className="flex items-center gap-2.5">
+                        <div className="flex items-center gap-3">
                             <div 
-                                className="size-2.5 rounded-full shrink-0" 
+                                className="size-3 rounded-full shrink-0 shadow-sm" 
                                 style={{ backgroundColor: ['#19a1e6', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef'][i % 6] }}
                             />
                             <div className="flex flex-col">
-                                <span className={`text-xs font-bold ${activeIndex === i ? 'text-primary' : 'text-gray-700 dark:text-gray-300'}`}>
+                                <span className={`text-sm font-bold ${activeIndex === i ? 'text-primary' : 'text-gray-700 dark:text-gray-300'}`}>
                                     {zone.name}
                                 </span>
+                                {/* Progress bar background */}
+                                <div className="w-24 h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full mt-1.5 overflow-hidden">
+                                    <div 
+                                        className="h-full rounded-full" 
+                                        style={{ 
+                                            width: `${(zone.ratio / totalRatio) * 100}%`,
+                                            backgroundColor: ['#19a1e6', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef'][i % 6]
+                                        }} 
+                                    />
+                                </div>
                             </div>
                         </div>
                         <div className="text-right">
-                             <span className={`text-xs font-bold ${activeIndex === i ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>
+                             <span className={`block text-sm font-bold ${activeIndex === i ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400'}`}>
                                 {zone.area}㎡
+                            </span>
+                             <span className="text-[10px] text-gray-400">
+                                {Math.round((zone.ratio / totalRatio) * 100)}%
                             </span>
                         </div>
                     </div>
@@ -579,7 +622,7 @@ const ZoneVisualization = ({ zones }: { zones: any[] }) => {
     );
 }
 
-const UnitDetailModal = ({ unit, modelName, floorPlanUrl, onClose }: { unit: any; modelName: string; floorPlanUrl: string; onClose: () => void }) => {
+const UnitDetailModal = ({ unit, modelName, modelArea, floorPlanUrl, onClose }: { unit: any; modelName: string; modelArea: string; floorPlanUrl: string; onClose: () => void }) => {
     const navigate = useNavigate();
     
     if (!unit) return null;
@@ -594,39 +637,59 @@ const UnitDetailModal = ({ unit, modelName, floorPlanUrl, onClose }: { unit: any
 
     // Determine flipped state based on unit prop
     const isFlipped = unit.isFlipped;
+    
+    // Calculate pyeong
+    const pyeong = (parseFloat(modelArea) / 3.3058).toFixed(1);
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 bg-black/60 backdrop-blur-sm animate-fadeIn" onClick={onClose}>
-             <div className="bg-white dark:bg-gray-900 w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-slideUp max-h-[90vh]" onClick={e => e.stopPropagation()}>
+             <div className="bg-white dark:bg-[#1c2730] w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden flex flex-col animate-slideUp max-h-[90vh]" onClick={e => e.stopPropagation()}>
                 {/* Modal Header/Image */}
-                <div className="relative h-64 bg-gray-200 dark:bg-gray-800">
-                    <FloorPlanViewer imageUrl={floorPlanUrl} flip={isFlipped} className="h-full w-full" />
+                <div className="relative h-64 bg-gray-100 dark:bg-gray-800 flex items-center justify-center overflow-hidden">
+                    {/* Interactive Zoomable FloorPlan */}
+                    <FloorPlanViewer 
+                        imageUrl={floorPlanUrl} 
+                        flip={isFlipped} 
+                        className="h-full w-full" 
+                        transparent={true}
+                    />
                     
                     <div className="absolute top-4 right-4 bg-primary text-white text-xs font-bold px-2 py-1 rounded shadow-sm z-20">
                         {unit.status === 'available' ? '분양 가능' : unit.status}
                     </div>
-                    <button onClick={onClose} className="absolute top-4 left-4 p-1 rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/50 transition-colors z-20">
+                    <button onClick={onClose} className="absolute top-4 left-4 p-1 rounded-full bg-black/10 hover:bg-black/20 text-gray-700 dark:text-white dark:bg-black/30 dark:hover:bg-black/50 transition-colors z-20">
                         <span className="material-symbols-outlined text-lg">close</span>
                     </button>
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4 z-20 pointer-events-none">
-                         <h3 className="text-xl font-bold text-white">{unit.id} <span className="text-sm font-normal opacity-90">({modelName})</span></h3>
-                    </div>
+                    
+                    {isFlipped && (
+                        <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1 z-20">
+                            <span className="material-symbols-outlined text-[12px]">flip</span>
+                            <span>좌우 대칭형 (Mirror)</span>
+                        </div>
+                    )}
                 </div>
                 
                 <div className="p-5 overflow-y-auto">
+                    <div className="mb-4">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                            {unit.id} 
+                            <span className="text-sm font-normal text-gray-500 dark:text-gray-400">({modelName})</span>
+                        </h3>
+                    </div>
+
                     <div className="flex justify-between items-center mb-4 p-3 bg-primary/5 rounded-xl border border-primary/10">
                         <div className="text-sm text-gray-600 dark:text-gray-300">분양 가격</div>
                         <div className="text-xl font-extrabold text-primary">{unit.price}</div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3 mb-5">
-                        <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                            <span className="text-xs text-gray-500 block mb-1">층수/방향</span>
-                            <span className="text-sm font-bold dark:text-white">{unit.floor} / {unit.direction}</span>
+                        <div className="p-3 bg-gray-50 dark:bg-[#111c21] rounded-lg border border-gray-100 dark:border-gray-700">
+                            <span className="text-xs text-gray-500 dark:text-gray-400 block mb-1">층수/방향</span>
+                            <span className="text-sm font-bold text-gray-900 dark:text-white">{unit.floor} / {unit.direction}</span>
                         </div>
-                        <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                            <span className="text-xs text-gray-500 block mb-1">전용 면적</span>
-                            <span className="text-sm font-bold dark:text-white">84.52㎡ (약 25.6평)</span>
+                        <div className="p-3 bg-gray-50 dark:bg-[#111c21] rounded-lg border border-gray-100 dark:border-gray-700">
+                            <span className="text-xs text-gray-500 dark:text-gray-400 block mb-1">전용 면적</span>
+                            <span className="text-sm font-bold text-gray-900 dark:text-white">{modelArea}㎡ (약 {pyeong}평)</span>
                         </div>
                     </div>
 
@@ -645,7 +708,7 @@ const UnitDetailModal = ({ unit, modelName, floorPlanUrl, onClose }: { unit: any
                         </div>
                     </div>
                     
-                    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700">
+                    <div className="p-3 bg-gray-50 dark:bg-[#111c21] rounded-lg border border-gray-100 dark:border-gray-700">
                         <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
                             <span className="font-bold text-gray-900 dark:text-white block mb-1">매니저 코멘트</span>
                             본 호실은 단지 내에서도 가장 선호도가 높은 {unit.direction} 라인에 위치하여 하루 종일 따스한 햇살을 즐기실 수 있습니다.
@@ -653,7 +716,7 @@ const UnitDetailModal = ({ unit, modelName, floorPlanUrl, onClose }: { unit: any
                     </div>
                 </div>
 
-                <div className="p-4 border-t border-gray-100 dark:border-gray-800 flex gap-2 bg-white dark:bg-gray-900">
+                <div className="p-4 border-t border-gray-100 dark:border-gray-800 flex gap-2 bg-white dark:bg-[#1c2730]">
                     <button onClick={onClose} className="flex-1 py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl font-bold text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
                         닫기
                     </button>
@@ -672,8 +735,8 @@ const ComparisonModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
     
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 bg-black/60 backdrop-blur-sm animate-fadeIn" onClick={onClose}>
-            <div className="bg-white dark:bg-gray-900 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] animate-slideUp" onClick={e => e.stopPropagation()}>
-                <div className="p-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-white dark:bg-gray-900 sticky top-0 z-10">
+            <div className="bg-white dark:bg-[#1c2730] w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] animate-slideUp" onClick={e => e.stopPropagation()}>
+                <div className="p-4 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-white dark:bg-[#1c2730] sticky top-0 z-10">
                     <div className="flex items-center gap-2">
                         <span className="material-symbols-outlined text-primary">compare_arrows</span>
                         <h3 className="text-lg font-bold text-gray-900 dark:text-white">모델 전체 라인업 비교</h3>
@@ -686,24 +749,24 @@ const ComparisonModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
                 <div className="overflow-x-auto">
                     <div className="min-w-[600px] grid grid-cols-[100px_1fr_1fr_1fr_1fr] divide-x divide-gray-100 dark:divide-gray-800 border-b border-gray-100 dark:border-gray-800">
                          {/* Header Row */}
-                        <div className="p-3 flex items-center justify-center bg-gray-50 dark:bg-gray-800/50 sticky left-0 z-10">
-                            <span className="text-xs font-bold text-gray-500">구분</span>
+                        <div className="p-3 flex items-center justify-center bg-gray-50 dark:bg-[#111c21]/50 sticky left-0 z-10">
+                            <span className="text-xs font-bold text-gray-500 dark:text-gray-400">구분</span>
                         </div>
                         <div className="p-3 flex flex-col items-center justify-center bg-primary/5">
                             <span className="text-sm font-bold text-primary">Type-A</span>
-                            <span className="text-[10px] text-gray-500">스탠다드</span>
+                            <span className="text-[10px] text-gray-500 dark:text-gray-400">스탠다드</span>
                         </div>
                         <div className="p-3 flex flex-col items-center justify-center bg-purple-50 dark:bg-purple-900/10">
                             <span className="text-sm font-bold text-purple-600 dark:text-purple-400">Type-B</span>
-                            <span className="text-[10px] text-gray-500">테라스형</span>
+                            <span className="text-[10px] text-gray-500 dark:text-gray-400">테라스형</span>
                         </div>
                         <div className="p-3 flex flex-col items-center justify-center bg-green-50 dark:bg-green-900/10">
                             <span className="text-sm font-bold text-green-600 dark:text-green-400">Type-C</span>
-                            <span className="text-[10px] text-gray-500">패밀리</span>
+                            <span className="text-[10px] text-gray-500 dark:text-gray-400">패밀리</span>
                         </div>
                         <div className="p-3 flex flex-col items-center justify-center bg-orange-50 dark:bg-orange-900/10">
                             <span className="text-sm font-bold text-orange-600 dark:text-orange-400">Town T1</span>
-                            <span className="text-[10px] text-gray-500">듀플렉스</span>
+                            <span className="text-[10px] text-gray-500 dark:text-gray-400">듀플렉스</span>
                         </div>
 
                         {/* Data Rows */}
@@ -715,8 +778,8 @@ const ComparisonModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
                             { label: '예상 가', a: '1.5억~', b: '2.2억~', c: '3.5억~', d: '5.2억~' },
                         ].map((row, i) => (
                             <React.Fragment key={i}>
-                                <div className="p-3 flex items-center justify-center bg-gray-50 dark:bg-gray-800/50 border-b border-gray-100 dark:border-gray-800 last:border-0 sticky left-0 z-10">
-                                    <span className="text-xs font-medium text-gray-500">{row.label}</span>
+                                <div className="p-3 flex items-center justify-center bg-gray-50 dark:bg-[#111c21]/50 border-b border-gray-100 dark:border-gray-800 last:border-0 sticky left-0 z-10">
+                                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{row.label}</span>
                                 </div>
                                 <div className="p-3 flex items-center justify-center text-center border-b border-gray-100 dark:border-gray-800 last:border-0">
                                     <span className="text-xs font-medium text-gray-700 dark:text-gray-300">{row.a}</span>
@@ -930,7 +993,7 @@ const ProductDetail: React.FC = () => {
     const currentData = modelData[selectedModel];
 
     return (
-        <div className="relative min-h-screen bg-background-light dark:bg-background-dark pb-24 transition-colors">
+        <div className="relative min-h-screen bg-[#f6f7f8] dark:bg-[#111c21] pb-24 transition-colors text-gray-900 dark:text-gray-100">
             {/* Header with Hero */}
             <header className="relative w-full h-[40vh] min-h-[300px]">
                 {heroViewMode === '3d' ? (
@@ -942,7 +1005,7 @@ const ProductDetail: React.FC = () => {
                         className="w-full h-full bg-cover bg-center transition-all duration-500"
                         style={{ backgroundImage: `url("${customHeroImage || modelImages[selectedModel].main}")` }}
                     >
-                        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-background-light dark:to-background-dark"></div>
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-[#f6f7f8] dark:to-[#111c21]"></div>
                         
                         {/* Top Nav */}
                         <div className="absolute top-0 left-0 w-full p-4 flex justify-between items-center z-10">
@@ -975,7 +1038,7 @@ const ProductDetail: React.FC = () => {
 
             {/* Content Body */}
             <div className="px-4 -mt-6 relative z-10">
-                <div className="bg-white dark:bg-surface-dark rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 p-5 mb-4">
+                <div className="bg-white dark:bg-[#1c2730] rounded-2xl shadow-lg border border-gray-100 dark:border-gray-800 p-5 mb-4">
                     <div className="flex justify-between items-start mb-2">
                         <div>
                             <span className="text-primary text-xs font-bold uppercase tracking-wider mb-1 block">{selectedModel.replace('-', ' ').toUpperCase()}</span>
@@ -1002,7 +1065,7 @@ const ProductDetail: React.FC = () => {
                             <button 
                                 key={m}
                                 onClick={() => setSelectedModel(m as any)}
-                                className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all border ${selectedModel === m ? 'bg-primary text-white border-primary' : 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700'}`}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all border ${selectedModel === m ? 'bg-primary text-white border-primary' : 'bg-gray-50 dark:bg-[#111c21] text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700'}`}
                             >
                                 {m.replace('type-', 'Type ').replace('type-t1', 'Town T1')}
                             </button>
@@ -1011,7 +1074,7 @@ const ProductDetail: React.FC = () => {
                 </div>
 
                 {/* Tabs */}
-                <div className="flex border-b border-gray-200 dark:border-gray-800 mb-4 sticky top-0 bg-background-light dark:bg-background-dark z-20 pt-2">
+                <div className="flex border-b border-gray-200 dark:border-gray-800 mb-4 sticky top-0 bg-[#f6f7f8] dark:bg-[#111c21] z-20 pt-2">
                     {[
                         { id: 'overview', label: '개요/평면/호실' },
                         { id: 'options', label: '옵션/갤러리' }
@@ -1031,23 +1094,54 @@ const ProductDetail: React.FC = () => {
                 <div className="flex flex-col gap-6 animate-fadeIn">
                     {activeTab === 'overview' && (
                         <>
+                            <section className="bg-white dark:bg-[#1c2730] rounded-2xl p-5 border border-gray-100 dark:border-gray-800 shadow-sm">
+                                <div className="flex items-center gap-2 mb-4">
+                                    <span className="material-symbols-outlined text-primary">fact_check</span>
+                                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">모델 상세 정보</h3>
+                                </div>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div className="p-4 bg-gray-50 dark:bg-[#111c21] rounded-xl border border-gray-100 dark:border-gray-700 flex flex-col justify-center">
+                                            <span className="text-xs text-gray-500 dark:text-gray-400 mb-1">총 전용 면적</span>
+                                            <div className="flex items-end gap-1">
+                                                <span className="text-xl font-bold text-gray-900 dark:text-white leading-none">{currentData.area}</span>
+                                                <span className="text-sm font-medium text-gray-500 mb-0.5">㎡</span>
+                                            </div>
+                                            <span className="text-xs text-gray-400 mt-1">약 {(parseFloat(currentData.area) / 3.3058).toFixed(1)}평</span>
+                                        </div>
+                                        <div className="p-4 bg-primary/5 rounded-xl border border-primary/10 flex flex-col justify-center">
+                                            <span className="text-xs text-gray-600 dark:text-gray-300 mb-1">분양 가격대</span>
+                                            <span className="text-xl font-bold text-primary leading-none">{currentData.price}</span>
+                                            <span className="text-xs text-primary/70 mt-1">VAT 별도</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="bg-gray-50 dark:bg-[#111c21] rounded-xl border border-gray-100 dark:border-gray-700 p-4">
+                                        <span className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Key Features</span>
+                                        <div className="space-y-2">
+                                            {currentData.features.map((f, i) => (
+                                                <div key={i} className="flex items-center gap-2">
+                                                    <span className="material-symbols-outlined text-primary text-[18px]">{f.icon}</span>
+                                                    <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">{f.text}</span>
+                                                </div>
+                                            ))}
+                                            <div className="flex items-start gap-2 pt-1 mt-1 border-t border-gray-200 dark:border-gray-700">
+                                                 <span className="material-symbols-outlined text-primary text-[18px] mt-0.5">auto_awesome</span>
+                                                 <span className="text-sm text-gray-700 dark:text-gray-300 font-medium leading-tight">{currentData.desc}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
                             <section>
                                 <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">평면도 및 공간 구성</h3>
                                 <FloorPlanViewer imageUrl={floorPlanImages[selectedModel]} className="aspect-[4/3] mb-4" />
                                 <ZoneVisualization zones={currentData.zones} />
                             </section>
                             
-                            <section>
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">주요 스펙</h3>
-                                <div className="grid grid-cols-3 gap-3">
-                                    {currentData.features.map((f, i) => (
-                                        <div key={i} className="bg-white dark:bg-surface-dark p-3 rounded-xl border border-gray-100 dark:border-gray-800 flex flex-col items-center gap-2 text-center shadow-sm">
-                                            <span className="material-symbols-outlined text-primary">{f.icon}</span>
-                                            <span className="text-xs font-bold text-gray-700 dark:text-gray-300">{f.text}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </section>
+                            {/* Removed redundant specs section as it is now covered in Model Details */}
 
                             {/* Added Unit List Section to Overview */}
                             <section className="mt-4 pt-6 border-t border-gray-200 dark:border-gray-800">
@@ -1063,7 +1157,7 @@ const ProductDetail: React.FC = () => {
                                            className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${
                                                unit.status === 'contracted' 
                                                    ? 'bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700 opacity-60 pointer-events-none' 
-                                                   : 'bg-white dark:bg-surface-dark border-gray-200 dark:border-gray-700 hover:border-primary shadow-sm hover:shadow-md'
+                                                   : 'bg-white dark:bg-[#1c2730] border-gray-200 dark:border-gray-700 hover:border-primary shadow-sm hover:shadow-md'
                                            }`}
                                        >
                                            <div>
@@ -1109,6 +1203,7 @@ const ProductDetail: React.FC = () => {
             <UnitDetailModal 
                 unit={selectedUnit} 
                 modelName={currentData.name}
+                modelArea={currentData.area}
                 floorPlanUrl={floorPlanImages[selectedModel]}
                 onClose={() => setSelectedUnit(null)} 
             />
@@ -1118,7 +1213,7 @@ const ProductDetail: React.FC = () => {
             />
 
             {/* CTA */}
-            <div className="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto bg-white dark:bg-surface-dark border-t border-gray-100 dark:border-gray-800 p-4 pb-8 z-40 transition-colors">
+            <div className="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto bg-white dark:bg-[#1c2730] border-t border-gray-100 dark:border-gray-800 p-4 pb-8 z-40 transition-colors">
                 <button onClick={() => navigate('/booking')} className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-white shadow-lg shadow-primary/30 transition-transform active:scale-[0.98]">
                     <span className="material-symbols-outlined text-[20px]">calendar_month</span>
                     <span className="text-base font-bold">모델하우스 방문 예약하기</span>

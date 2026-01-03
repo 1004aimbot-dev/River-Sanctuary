@@ -1,10 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 
 const Home: React.FC = () => {
     const navigate = useNavigate();
     const { isDark, toggleTheme } = useTheme();
+    const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+
+    const heroImages = [
+        "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=2574&auto=format&fit=crop", // Bright Sunny Pool Villa
+        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2666&auto=format&fit=crop", // Bright Modern Glass House
+        "https://images.unsplash.com/photo-1600566753086-00f18cf6b3ea?q=80&w=2574&auto=format&fit=crop"  // Hopeful Bright Architecture
+    ];
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentHeroIndex((prev) => (prev + 1) % heroImages.length);
+        }, 8000); // 8000ms rotation
+        return () => clearInterval(timer);
+    }, [heroImages.length]);
 
     return (
         <div className="relative flex min-h-screen w-full flex-col pb-24 bg-[#f6f7f8] dark:bg-[#111c21] transition-colors duration-300">
@@ -33,22 +47,40 @@ const Home: React.FC = () => {
             </header>
 
             {/* Hero Section */}
-            <section className="relative w-full h-[65vh] overflow-hidden rounded-b-3xl shadow-xl">
-                <div 
-                    className="absolute inset-0 bg-cover bg-center" 
-                    style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuD2iPDgwlS5mGElh_6D4Scwk0yLZHuTZRCMLD5fymGOc86MYe1SNv-LMs50u0GHZz0jB64stzh3a6d7JJ-xlFz-H5-9bPCNH8SOG8wXSuz2hDyW_wTNhQI7AWnywSgRyw3QmtKG7UPHGDwuNhZqIrTdqteS7fUaEsQEaPKUTfpahqOTitJ0K_KoI1TO2S4pETyg1mae4L_JE-mnY-14MhF1XzFk11zLP3Q7Z1UR-BecqX1D2cJgUpZPN1s3nAALBXs5ypBrKLspaT6h')" }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
-                <div className="absolute bottom-0 w-full p-6 pb-12 flex flex-col gap-2">
-                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-primary/90 w-fit mb-2 backdrop-blur-sm">
+            <section className="relative w-full h-[65vh] overflow-hidden rounded-b-3xl shadow-xl bg-gray-200 dark:bg-gray-800">
+                {heroImages.map((img, index) => (
+                    <div 
+                        key={index}
+                        className={`absolute inset-0 w-full h-full bg-cover bg-center transition-all duration-[2000ms] ease-in-out will-change-transform ${
+                            index === currentHeroIndex ? 'opacity-100 scale-105 z-10' : 'opacity-0 scale-100 z-0'
+                        }`}
+                        style={{ backgroundImage: `url('${img}')` }}
+                    />
+                ))}
+
+                {/* Softened Gradient for Bright Images */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none z-20"></div>
+                
+                <div className="absolute bottom-0 w-full p-6 pb-12 flex flex-col gap-2 pointer-events-none z-30">
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-primary/90 w-fit mb-2 backdrop-blur-sm shadow-sm">
                         <span className="text-xs font-bold text-white uppercase tracking-wider">분양 중</span>
                     </div>
-                    <h1 className="text-white text-3xl font-extrabold leading-tight tracking-tight break-keep">
+                    <h1 className="text-white text-3xl font-extrabold leading-tight tracking-tight break-keep drop-shadow-lg">
                         강변의 고요한 안식처,<br />리버 샌츄어리
                     </h1>
-                    <p className="text-gray-200 text-lg font-medium leading-snug max-w-[90%] break-keep">
+                    <p className="text-white/90 text-lg font-medium leading-snug max-w-[95%] break-keep drop-shadow-md">
                         도심 접근 3분, 자연과 럭셔리가 만나는 프리미엄 세컨하우스
                     </p>
+                    {/* Carousel Indicators */}
+                    <div className="flex gap-2 mt-2 pointer-events-auto">
+                        {heroImages.map((_, idx) => (
+                            <button 
+                                key={idx}
+                                onClick={() => setCurrentHeroIndex(idx)}
+                                className={`h-1.5 rounded-full transition-all duration-500 shadow-sm ${idx === currentHeroIndex ? 'w-6 bg-white' : 'w-1.5 bg-white/40 hover:bg-white/60'}`}
+                            />
+                        ))}
+                    </div>
                 </div>
             </section>
 
